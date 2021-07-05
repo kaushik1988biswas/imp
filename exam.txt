@@ -1,0 +1,195 @@
+select * from emp
+ where sal = (select max(sal) from emp
+ where sal < (select max(sal) from emp 
+ where sal <(select max(sal) from emp)));
+
+select * from emp1;
+select max(sal) from emp1
+where sal<(select max(sal) from emp1 
+where sal<(select max(sal) from emp1
+where sal< (select max(sal) from emp1)));
+
+create table emp(
+empno char(10),
+empname varchar(25),
+sal float,
+City varchar(20),
+deptno int,
+hiredate date
+);
+drop table emp;
+insert into emp values('1','ADAMS',1000,'Mumbai',10,'2020-01-25'),
+('2','BLAKE',2000,'Delhi',10,'2020-02-15'),
+('3','ALLEN',2500,'Mumbai',20,'2021-03-10'),
+('4','KING',3000,'Delhi',25,'2021-07-02'),
+('5','FORD',4000,'Mumbai',40,'2019-09-08');
+insert into emp values('6','KIRAN',6000,'Nagar',40,'2020-06-30');
+insert into emp values('7','KETAN',7000,'satara',20,'2020-02-29');
+insert into emp values('8','KASHI',75000,'pune',40,'2019-05-31');
+
+/*Display annual salary of each Employee*/
+
+select empname,sal AS Monthly,sal*12 Annual from emp;
+select * from emp;
+
+/* How many employe join in feb*/
+select  empname from emp
+where hiredate between '2020-02-01' and '2020-02-29';
+
+select count(empname) from emp
+where monthname(hiredate)='February';
+
+select Empname from emp
+where monthname(hiredate)='February';
+
+/* Display ename,Empno aliase name,number  */
+
+select Empname as name,empno as number from emp;
+
+/* find the number of all employe who hired last day on month*/
+
+select count(empname) from emp
+where hiredate=
+any(select last_day(hiredate) from emp where last_day(hiredate));
+
+select Count(empname) from emp
+where hiredate= last_day(hiredate);
+
+/* find the name of employee with max(sal)*/
+
+select empname,sal from emp
+where sal=(select max(sal) from emp);
+
+select empname,sal from emp
+where sal=(select max(sal) from emp
+where sal<(select max(sal) from emp));
+
+
+/* Display name of all employee replacing 'A' with 'a'*/
+
+select replace(empname,'A','a') from emp;
+select * from emp;
+create index ind_number on emp(empno);
+show indexes from emp;
+select * from emp where deptno=10 and sal > 500;
+create index ind_deptn0_sal on emp(sal,deptno);
+select empname as name, empno as number from emp;
+
+
+
+/* find the sum of salary for all employee blonging dept no=10*/
+select sum(sal) from emp
+where deptno=10;
+
+
+/*display row where empname column end with letter E*/
+select * from emp
+where empname like '%N';
+
+ /*question number 02 := Your block should read in two real numbers and tell whether the product of the two
+numbers is less than or equal to or greater than 100.....add message*/
+
+create table tempp(
+product float,
+res varchar(30)
+);
+
+delimiter //
+create procedure num_100(x float,y float)
+begin
+ declare product float;
+ set product=x*y;
+ 
+ if product > 100 then
+  insert into tempp values(product,'value gretate than 100 ');
+  elseif product < 100 then 
+  insert into tempp values (product,'value less than 100');
+  else
+  insert into tempp value (product,'values equal to 100');
+
+end if;
+end ; //
+delimiter ;
+
+select * from tempp;
+
+call num_100(10,10);
+call num_100(5,10);
+call num_100(100,10);
+
+
+/* Quetion no - 3 Convert a temperature in Fahrenheit (F) to its equivalent in Celsius (C) and vice
+versa. The required formulae are:- C= (F-32)*5/9
+F= 9/5*C + 32*/
+
+delimiter //
+create function F2C(F float)
+returns float
+begin
+
+declare C float;
+set C=(F-32)*5/9;
+return C;
+
+end ; //
+delimiter ;
+
+
+delimiter //
+create procedure teemp (T float)
+begin
+ declare C float;
+ set C=F2C(T);
+ insert into tempp values (C,'celsius');
+ end ; //
+ delimiter ;
+ 
+ 
+ truncate tempp;
+ select * from tempp;
+
+call teemp(100);
+
+
+
+/**************** view*********************/
+
+create view v1 as select ename,empno from emp10;
+drop view v1;
+create user 'Akshay'@localhost identified by 'cdac';
+grant select on v1 to 'Akshay'@localhost;
+create view v1 as select * from emp10;
+/**********saecod salary**********/
+
+select max(sal) from emp4
+where sal<
+(select max(sal) from emp4);
+
+/*************third high salary**************/
+
+select * from emp
+ where sal = (select max(sal) from emp
+ where sal < (select max(sal) from emp 
+ where sal <(select max(sal) from emp)));
+
+
+
+/*********Join*******/
+
+/*right*/
+select dname, ename from emp right outer join dept 
+on (dept.deptno = emp.deptno); 
+/*left*/
+select dname, ename from emp left outer join dept 
+on (dept.deptno = emp.deptno); 
+/* full */
+select dname, ename from emp left outer join dept 
+on (dept.deptno = emp.deptno); 
+
+  /*primary and Foreign key*/
+ /* constraint fk_Donor_id foreign key Blood_info(Donor_id) references Donor(Donor_id),
+constraint pk_Blood_infoid primary key Blood_info(Blood_infoid)
+*/
+
+
+
